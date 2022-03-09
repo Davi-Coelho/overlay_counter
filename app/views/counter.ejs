@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Counter <%=channel %></title>
+    <link rel="stylesheet" href="/css/counter.css">
+</head>
+<body>
+    <span class="counter">Mortes:<span id="counter-value"><%=counter %></span></span>
+    <script type="text/javascript">
+        const channel = <%- JSON.stringify(channel) %>
+    </script>
+    <script src="/js/counter.js"></script>
+</body>
+</html>

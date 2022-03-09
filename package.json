@@ -1,0 +1,24 @@
+{
+  "name": "overlay_counter",
+  "version": "1.0.0",
+  "description": "Overlay para contagem de eventos",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "serve": "pm2 start app.js --name overlay_counter"
+  },
+  "author": "Davi Coelho",
+  "license": "MIT",
+  "dependencies": {
+    "consign": "^0.1.6",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.4",
+    "tmi.js": "^1.8.5",
+    "ws": "^8.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
