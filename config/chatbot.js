@@ -18,7 +18,7 @@ module.exports = (wss) => {
 
         const splittedMessage = message.split(' ')
 
-        if (splittedMessage.length === 2 || splittedMessage[0] === '!morreu') {
+        if (splittedMessage.length === 2 || splittedMessage[0] === '!morreu' || splittedMessage[0] === '!decmorreu') {
             if (tags.badges.hasOwnProperty('broadcaster') || tags.mod) {
 
                 const CounterDAO = new CounterDAOImport(db.CounterModel)
