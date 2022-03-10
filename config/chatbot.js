@@ -38,6 +38,14 @@ module.exports = (wss) => {
                         ws.forEach(el => el.send(counter.value))
                     })
                 }
+                else if (splittedMessage[0] === '!decmorreu') {
+                    CounterDAO.decreaseCounter(channel, async () => {
+                        const ws = Array.from(wss.clients).filter(el => el.id === channel)
+                        const data = await CounterDAO.getCounter(channel)
+                        const counter = data.counters.find(el => el.name === data.currentCounter)
+                        ws.forEach(el => el.send(counter.value))
+                    })
+                }
                 else if (splittedMessage[0] === '!setcounter') {
                     CounterDAO.setCounter(channel, splittedMessage[1], async () => {
                         const ws = Array.from(wss.clients).filter(el => el.id === channel)
