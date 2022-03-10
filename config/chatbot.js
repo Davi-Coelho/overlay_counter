@@ -18,7 +18,7 @@ module.exports = (wss) => {
 
         const splittedMessage = message.split(' ')
 
-        if (splittedMessage.length === 2 || splittedMessage[0] === '!morreu' || splittedMessage[0] === '!decmorreu') {
+        if (splittedMessage.length === 2 || splittedMessage[0] === '!morreu' || splittedMessage[0] === '!penhasco' || splittedMessage[0] === '!decmorreu') {
             if (tags.badges.hasOwnProperty('broadcaster') || tags.mod) {
 
                 const CounterDAO = new CounterDAOImport(db.CounterModel)
@@ -30,7 +30,7 @@ module.exports = (wss) => {
                 else if (splittedMessage[0] === '!deletecounter') {
                     CounterDAO.deleteCounter(channel, splittedMessage[1])
                 }
-                else if (splittedMessage[0] === '!morreu') {
+                else if (splittedMessage[0] === '!morreu' || splittedMessage[0] === '!penhasco') {
                     CounterDAO.increaseCounter(channel, async () => {
                         const ws = Array.from(wss.clients).filter(el => el.id === channel)
                         const data = await CounterDAO.getCounter(channel)
