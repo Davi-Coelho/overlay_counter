@@ -6,7 +6,7 @@ module.exports.getCounter = async (application, req, res) => {
     const data = await CounterDAO.getCounter(req.params.channel)
 
     if (data) {
-        const counter = data.counters.find(element => element.name === req.params.countername)
+        const counter = data.counters.find(el => el.name === data.currentCounter)
         res.render('counter', { channel: data.channel, counter: counter.value })
     }
     else {
@@ -26,6 +26,7 @@ module.exports.newChannel = (application, req, res) => {
 
             const CounterDAO = new application.app.models.CounterDAO(application.db.CounterModel)
             CounterDAO.createChannelCounter(req.body.channel, (result) => {
+                application.chatbot.join('#' + req.body.channel)
                 res.sendStatus(200)
             })
         }

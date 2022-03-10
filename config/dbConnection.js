@@ -9,6 +9,10 @@ const CounterSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    currentCounter: {
+        type: String,
+        required: true
+    },
     counters: [
         {
             name: {

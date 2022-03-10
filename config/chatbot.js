@@ -12,13 +12,13 @@ module.exports = (wss) => {
     client.on('message', onMessageHandler)
     client.connect()
 
-    async function onMessageHandler(channel, tags, message, self) {
+    function onMessageHandler(channel, tags, message, self) {
         if (self) return
         if (message.charAt(0) !== '!') return
 
         const splittedMessage = message.split(' ')
 
-        if (splittedMessage.length === 2 || splittedMessage.length === 3) {
+        if (splittedMessage.length === 2 || splittedMessage[0] === '!morreu') {
             if (tags.badges.hasOwnProperty('broadcaster') || tags.mod) {
 
                 const CounterDAO = new CounterDAOImport(db.CounterModel)
@@ -30,16 +30,29 @@ module.exports = (wss) => {
                 else if (splittedMessage[0] === '!deletecounter') {
                     CounterDAO.deleteCounter(channel, splittedMessage[1])
                 }
-                else if (splittedMessage[0] === '!death') {
-                    CounterDAO.increaseCounter(channel, splittedMessage[1], async () => {
+                else if (splittedMessage[0] === '!morreu') {
+                    CounterDAO.increaseCounter(channel, async () => {
                         const ws = Array.from(wss.clients).filter(el => el.id === channel)
                         const data = await CounterDAO.getCounter(channel)
-                        const counter = data.counters.find(el => el.name === splittedMessage[1])
+                        const counter = data.counters.find(el => el.name === data.currentCounter)
                         ws.forEach(el => el.send(counter.value))
                     })
                 }
                 else if (splittedMessage[0] === '!setcounter') {
-                    CounterDAO.setCounter(channel, splittedMessage[1], splittedMessage[2])
+                    CounterDAO.setCounter(channel, splittedMessage[1], async () => {
+                        const ws = Array.from(wss.clients).filter(el => el.id === channel)
+                        const data = await CounterDAO.getCounter(channel)
+                        const counter = data.counters.find(el => el.name === data.currentCounter)
+                        ws.forEach(el => el.send(counter.value))
+                    })
+                }
+                else if (splittedMessage[0] === '!changecounter') {
+                    CounterDAO.changeCounter(channel, splittedMessage[1], async () => {
+                        const ws = Array.from(wss.clients).filter(el => el.id === channel)
+                        const data = await CounterDAO.getCounter(channel)
+                        const counter = data.counters.find(el => el.name === data.currentCounter)
+                        ws.forEach(el => el.send(counter.value))
+                    })
                 }
             }
         }

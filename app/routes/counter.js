@@ -1,5 +1,5 @@
 module.exports = (application) => {
-    application.get('/counter/:channel/:countername', (req, res) => {
+    application.get('/counter/:channel', (req, res) => {
         application.app.controllers.counter.getCounter(application, req, res)
     })
 

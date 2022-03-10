@@ -1,6 +1,10 @@
 let wss = null
 const WebSocket = require('ws')
  
+function heartbeat() {
+    this.isAlive = true
+  }
+
 function onError(ws, err) {
     console.error(`onError: ${err.message}`)
 }
@@ -8,19 +12,16 @@ function onError(ws, err) {
 function onMessage(ws, data) {
     console.log(`${ws.id} ${data}`)
 }
-
-function onClose(code, ws) {
-    console.log(`${ws.id} desconectado!`)
-}  
  
 function onConnection(ws, req) {
+    ws.isAlive = true
     const splittedMessage = req.url.split('?')
     const channel = splittedMessage[1].split('=')[1]
 
     ws.id = channel
     ws.on('error', error => onError(ws, error))
     ws.on('message', data => onMessage(ws, data))
-    ws.on("close", code => onClose(code, ws))
+    ws.on('pong', heartbeat)
 }
  
 module.exports = (server) => {
@@ -29,6 +30,19 @@ module.exports = (server) => {
     })
  
     wss.on('connection', onConnection)
+
+    const interval = setInterval(function ping() {
+        wss.clients.forEach(function each(ws) {
+            if (ws.isAlive === false) return ws.terminate()
+
+            ws.isAlive = false;
+            ws.ping()
+        })
+    }, 30000)
+
+    wss.on('close', function close() {
+        clearInterval(interval)
+    })
  
     console.log(`App Web Socket Server is running!`)
     return wss
