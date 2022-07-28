@@ -4,7 +4,7 @@ const app = express()
 
 app.set('view engine', 'ejs')
 app.set('views', './app/views')
-app.use(express.static('./app/public'))
+app.use('static_overlay_counter', express.static('./app/public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
